@@ -1,7 +1,15 @@
 import './App.css'
+import { Routes, Route } from "react-router";
+import { Homepage } from './pages/Homepage';
+import SignUp from './pages/SignUp';
 
 function App() {
-  return <h1>NATATAE NA AKO</h1>
+  return (
+  <Routes>
+      <Route path="/" element={<Homepage />} />
+      <Route path="/signup" element={<SignUp />} />
+    </Routes>
+    );
 }
 
-export default App
+export default App;
