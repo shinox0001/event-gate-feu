@@ -21,7 +21,7 @@ const NavBar = () => {
 						<HomeIcon className="text-lg" />
 						Home
 					</NavLink>
-					<NavLink to="/sign-up" className="btn btn-primary mr-4 rounded-full">
+					<NavLink to="/SignUp" className="btn btn-primary mr-4 rounded-full">
 						<SignUpIcon className="text-lg" />
 						Sign Up
 					</NavLink>
