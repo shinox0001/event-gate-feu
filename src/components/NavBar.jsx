@@ -2,8 +2,21 @@ import React from "react";
 import { NavLink } from "react-router";
 import SignUpIcon from "./icons/SignUpIcon";
 import HomeIcon from "./icons/HomeIcon";
+import { useContext, useEffect } from "react";
+import { SessionContext } from "./contexts/SessionContext";
+import { supabase } from "../utils/supabase";
+import LoginIcon from "./icons/LoginIcon";
+import ProfileIcon from "./icons/ProfileIcon";
+import Settings from "./icons/Settings";
 
 const NavBar = () => {
+	const session = useContext(SessionContext);
+
+	const handleLogout = async () => {
+		const { error } = await supabase.auth.signOut();
+		if (error) console.error("Error signing out:");
+	}
+
 	return (
 		<div className="navbar bg-base-100 shadow-sm">
 			<div className="flex w-full max-w-7xl mx-auto">
@@ -16,46 +29,66 @@ const NavBar = () => {
 				<div className="flex-none">
 					<NavLink
 						to="/"
-						className="btn btn-primary mr-4 rounded-full btn-outline"
+						className="btn btn-warning mr-4 rounded-full btn-outline"
 					>
 						<HomeIcon className="text-lg" />
 						Home
 					</NavLink>
-					<NavLink to="/SignUp" className="btn btn-primary mr-4 rounded-full">
-						<SignUpIcon className="text-lg" />
-						Sign Up
-					</NavLink>
-					<div className="dropdown dropdown-end">
-						<div
-							tabIndex={0}
-							role="button"
-							className="btn btn-ghost btn-circle avatar"
-						>
-							<div className="w-10 rounded-full">
-								<img
-									alt="Tailwind CSS Navbar component"
-									src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-								/>
+					{!session && (
+						<NavLink to="/SignUp" className="btn btn-primary mr-4 rounded-full btn-outline justify-center">
+							<SignUpIcon className="text-lg" />
+							Sign Up
+						</NavLink>
+					)}
+
+					{!session && (
+						<NavLink to="/Login" className="btn btn-info mr-4 rounded-full btn-outline justify-center">
+							<LoginIcon className="text-lg" />
+							Login
+						</NavLink>
+					)}
+
+					{ }
+					{session && (
+						<button onClick={handleLogout} className="btn btn-error mr-4 rounded-full btn-outline">
+							Log Out
+						</button>
+					)}
+
+					{session && (
+						<div className="dropdown dropdown-end">
+							<div
+								tabIndex={0}
+								role="button"
+								className="btn btn-ghost btn-circle avatar"
+							>
+								<div className="w-10 rounded-full">
+									<img
+										alt="Tailwind CSS Navbar component"
+										src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSP63q_lX7WgzYAKL11BycUQI9e1giJApx9Bw&s"
+									/>
+								</div>
 							</div>
+							<ul
+								tabIndex="-1"
+								className="menu menu-sm dropdown-content bg-lightgrey-400 box z-1 mt-3 w-52 p-2"
+							>
+								<li>
+									<div className="justify-between">
+										<NavLink to="/Profile"
+											className="btn btn-ghost mr-4 justify-center">
+											<ProfileIcon className="text-lg" />
+											Profile
+										</NavLink>
+									</div>
+
+
+								</li>
+							</ul>
 						</div>
-						<ul
-							tabIndex="-1"
-							className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
-						>
-							<li>
-								<a className="justify-between">
-									Profile
-									<span className="badge">New</span>
-								</a>
-							</li>
-							<li>
-								<a>Settings</a>
-							</li>
-							<li>
-								<a>Logout</a>
-							</li>
-						</ul>
-					</div>
+					)}
+
+
 				</div>
 			</div>
 		</div>

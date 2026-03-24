@@ -1,84 +1,98 @@
-import React from 'react'
-import MainLayout from '../layouts/MainLayout';
-import Input from '../components/form/input';
-import Card from '../components/icons/Card';
-import SendIcon from '../components/icons/SendIcon';
-import { supabase } from '../utils/supabase';
+import Input from "../components/form/Input";
+import MainLayout from "../layouts/MainLayout";
+import Card from "../components/icons/Card";
+import SendIcon from "../components/icons/SendIcon";
+import SignUpIcons from "../components/icons/SignUpIcon";
+import { supabase } from "../utils/supabase";
+import { SessionContext } from "../components/contexts/SessionContext";
+import { useContext, useEffect } from "react";
+import { useNavigate } from "react-router";
 
 const SignUp = () => {
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const signupform = {
-      firstname: formData.get('firstname'),
-      lastname: formData.get('lastname'),
-      email: formData.get('email'),
-      password: formData.get('password'), 
-    }; 
-    const { data, error } = await supabase.auth.signUp({
-  email: signupform.email,
-  password: signupform.password,
-});
-if (error) {
-  console.error("Error signing up:", error.message);
-} else {
-  console.log("User signed up successfully:", data);
-}
+  const session = useContext(SessionContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (session) {
+      navigate("/");
+    }
+  }, [session, navigate]);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+      const formData = new FormData(event.target);
+      const signupForm = {
+        firstname: formData.get("firstname"),
+        lastname: formData.get("lastname"),
+        email: formData.get("email"),
+        password: formData.get("password"),
+    };
+
+    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+      email: signupForm.email,
+      password: signupForm.password,
+    });
+
+    if (error) alert(signUpError);
+
+    if (signUpData) {
+      const { data: profileData, error: profileError } = await supabase
+        .from("profiles")
+        .insert({
+          id: signUpData.user.id,
+          firstname: signupForm.firstname,
+          lastname: signupForm.lastname,
+          email: signupForm.email,
+        });
+      if (profileError) alert(profileError);
+      if (profileData) console.log("Profile created", profileData);
+    }
   };
-    
-  
 
   return (
     <MainLayout>
-      
-      <div className="flex flex-col gap-1 border-2 p-4 rounded-xl">
-        <span className="text-center text-2xl">CERTIFIED YOUNG STUNNA SIGN UP</span> 
-        <div>
-          <Card>
-            <form onSubmit={handleSubmit}>
-              <Input name="firstname" 
-            placeholder="Enter your First Name, ya" 
-            type="Firstname" 
-            label="FirstName" 
-            />
-
-            <Input name="lastname" 
-            placeholder="Enter your Last Name, ya" 
-            type="Lastname" 
-            label="LastName" 
-            />
-
-            <Input name="email" 
-            placeholder="Enter your Email, ya" 
-            type="email" 
-            label="Email" 
-            />
-
-            <Input name="password" 
-            placeholder="Enter your Password, ya" 
-            type="password" 
-            label="Password" 
-            />  
-
-            <div className="text-center">
+      <div className="flex flex-col md:flex-row gap-4 justify-center items-center">
+        <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
           
-          
-          <button className="btn btn-primary mt-4">
-            <SendIcon />
-            BECOME A YOUNG STUNNA!!
-            </button>
-        </div>
-            </form>
-          </Card>
-        </div>
 
-    
-        
+          <h1 className="text-xl font-bold mb-4 flex justify-center">
+            Create an Account
+          </h1>
+          <form onSubmit={handleSubmit}>
+            <Input
+              name="firstname"
+              placeholder="Enter your First Name"
+              label="First Name"
+              type="text"
+            />
+            <Input
+              name="lastname"
+              placeholder="Enter your Last Name"
+              label="Last Name"
+              type="text"
+            />
+            <Input
+              name="email"
+              placeholder="Enter your Email"
+              label="Email"
+              type="email"
+            />
+            <Input
+              name="password"
+              placeholder="Enter your Password"
+              label="Password"
+              type="password"
+            />
+            <div className="flex justify-center">
+              <button className="btn btn-primary mt-4">
+                <SendIcon />
+                Create Account
+              </button>
+            </div>
+          </form>
+        </fieldset>
       </div>
-
-       
     </MainLayout>
-
   );
 };
 
