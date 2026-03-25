@@ -5,15 +5,15 @@ import Footer from '../components/Footer';
 const MainLayout = ({ children }) => {
   return (
     <div>
-        <NavBar />
-        <div className="flex flex-col items-center justify-center min-h-[calc(100vh-80rem)] border-0">
-            <main className=""> {children}</main>
-        </div>   
-        <Footer />
+      <NavBar />
+      <div className="flex flex-col items-center justify-center min-h-[calc(100vh-80rem)] border-0">
+        <main className=""> {children}</main>
+      </div>
+      <Footer />
 
     </div>
-    
-    
+
+
   );
 };
 

@@ -2,14 +2,14 @@ import Input from "../components/form/Input";
 import MainLayout from "../layouts/MainLayout";
 import Card from "../components/icons/Card";
 import SendIcon from "../components/icons/SendIcon";
-import SignUpIcons from "../components/icons/SignUpIcon";
+import SignUpIcon from "../components/icons/SignUpIcon";
 import { supabase } from "../utils/supabase";
 import { SessionContext } from "../components/contexts/SessionContext";
 import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router";
 
 const SignUp = () => {
-  const session = useContext(SessionContext);
+  const { session } = useContext(SessionContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -20,12 +20,12 @@ const SignUp = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-      const formData = new FormData(event.target);
-      const signupForm = {
-        firstname: formData.get("firstname"),
-        lastname: formData.get("lastname"),
-        email: formData.get("email"),
-        password: formData.get("password"),
+    const formData = new FormData(event.target);
+    const signupForm = {
+      firstname: formData.get("firstname"),
+      lastname: formData.get("lastname"),
+      email: formData.get("email"),
+      password: formData.get("password"),
     };
 
     const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
@@ -53,7 +53,7 @@ const SignUp = () => {
     <MainLayout>
       <div className="flex flex-col md:flex-row gap-4 justify-center items-center">
         <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
-          
+
 
           <h1 className="text-xl font-bold mb-4 flex justify-center">
             Create an Account
