@@ -1,108 +1,79 @@
 import Input from "../components/form/Input";
 import MainLayout from "../layouts/MainLayout";
+import Card from "../components/icons/Card";
 import SendIcon from "../components/icons/SendIcon";
 import { supabase } from "../utils/supabase";
-import { useContext, useState, useEffect } from "react";
+import { useContext } from "react";
 import { SessionContext } from "../components/contexts/SessionContext";
 import { useNavigate } from "react-router";
 
 const EditProfile = () => {
-  const session = useContext(SessionContext);
+  const { session, profile, setProfile } = useContext(SessionContext);
   const navigate = useNavigate();
-  const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [formData, setFormData] = useState({
-    firstname: '',
-    lastname: '',
-    email: '',
-  });
 
-  useEffect(() => {
-    if (session) {
-      fetchProfile();
-    } else {
-      navigate('/login');
-    }
-  }, [session]);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const signupForm = {
+      firstname: formData.get("firstname"),
+      lastname: formData.get("lastname"),
+      email: formData.get("email"),
+    };
 
-  const fetchProfile = async () => {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', session.user.id)
+    const { data: profileData, error: profileError } = await supabase
+      .from("Profile")
+      .update({
+        firstname: signupForm.firstname,
+        lastname: signupForm.lastname,
+        email: signupForm.email,
+      })
+      .eq("id", session.user.id)
+      .select()
       .single();
 
-    if (error) {
-      alert('Error fetching profile: ' + error.message);
-    } else if (data) {
-      setProfile(data);
-      setFormData({
-        firstname: data.firstname || '',
-        lastname: data.lastname || '',
-        email: data.email || '',
-      });
-    }
-    setLoading(false);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const { error } = await supabase
-      .from('profiles')
-      .update(formData)
-      .eq('id', session.user.id);
-
-    if (error) {
-      alert('Update error: ' + error.message);
-    } else {
-      navigate('/Profile');
+    if (profileError) alert(profileError);
+    if (profileData) {
+      navigate("/profile");
+      setProfile(profileData);
     }
   };
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  if (loading) return <div>Loading...</div>;
+  console.log("profile from edit profile", profile);
 
   return (
     <MainLayout>
-      <div className="flex flex-col md:flex-row gap-4 justify-center items-center min-h-screen">
-        <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
-          <h1 className="text-xl font-bold mb-4 flex justify-center">Edit Profile</h1>
-          <form onSubmit={handleSubmit}>
-            <Input
-              name="firstname"
-              placeholder="First Name"
-              label="First Name"
-              type="text"
-              defaultValue={profile?.firstname}
-            />
-            <Input
-              name="lastname"
-              placeholder="Last Name"
-              label="Last Name"
-              type="text"
-              defaultValue={profile?.lastname}
-            />
-            <Input
-              name="email"
-              placeholder="Email"
-              label="Email"
-              type="email"
-              defaultValue={profile?.email}
-            />
-            <div className="flex justify-center">
-              <button className="btn btn-primary mt-4">
-                <SendIcon />
-                Update Profile
+      <div className="flex flex-col">
+        <div className="flex justify-center items-center flex-1">
+          <Card>
+            <h1 className="text-xl font-bold">Edit Profile</h1>
+            <form onSubmit={handleSubmit}>
+              <Input
+                name="firstname"
+                placeholder="Enter your First Name"
+                label="Firstname"
+                type="text"
+                defaultValue={profile?.firstname}
+              />
+              <Input
+                name="lastname"
+                placeholder="Enter your Last Name"
+                label="Lastname"
+                type="text"
+                defaultValue={profile?.lastname}
+              />
+              <Input
+                name="email"
+                placeholder="Enter your Email"
+                label="Email"
+                type="email"
+                defaultValue={profile?.email}
+              />
+              <button className="btn btn-primary rounded-full mt-5">
+                <SendIcon className="text-sm" /> Submit
               </button>
-            </div>
-          </form>
-        </fieldset>
+            </form>
+          </Card>
+        </div>
       </div>
     </MainLayout>
   );

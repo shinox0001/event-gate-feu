@@ -1,16 +1,16 @@
 import './App.css'
 import { Routes, Route } from "react-router";
-import { Homepage } from './pages/Homepage';
+import Homepage from './pages/Homepage';
 import SignUp from './pages/SignUp';
 import { useState, useEffect } from 'react';
 import { supabase } from './utils/supabase';
 import Login from './pages/Login';
-import { useNavigate } from 'react-router';
 import Profile from './pages/Profile';
 import EditProfile from './pages/EditProfile';
 import { SessionContext } from './components/contexts/SessionContext';
 import ManageEvents from './pages/ManageEvents';
-import AddEvents from './pages/AddEvents';
+import AddEvent from './pages/AddEvent';
+import EditEvent from './pages/EditEvent';
 
 function App() {
   const [session, setSession] = useState(null);
@@ -38,17 +38,16 @@ function App() {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      if (session) {
-        const { data, error } = await supabase
-          .from("profiles")
-          .select()
-          .eq("id", session?.user.id)
-          .single();
+      const { data, error } = await supabase
+        .from("profiles")
+        .select()
+        .eq("id", session.user.id)
+        .single();
 
-        if (error) console.error(error);
-        if (data) console.log("data", data);
+      if (error) alert(error);
+      if (data) {
         setProfile(data);
-      };
+      }
     };
 
     if (session) {
@@ -66,7 +65,8 @@ function App() {
         <Route path="/Profile" element={<Profile />} />
         <Route path="/EditProfile" element={<EditProfile />} />
         <Route path="/ManageEvents" element={<ManageEvents />} />
-        <Route path="/AddEvents" elements={<AddEvents />} />
+        <Route path="/AddEvent" element={<AddEvent />} />
+        <Route path="/EditEvent/:eventId" element={<EditEvent />} />
       </Routes>
     </SessionContext.Provider>
   );

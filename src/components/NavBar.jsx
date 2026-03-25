@@ -54,11 +54,14 @@ const NavBar = () => {
 							Log Out
 						</button>
 					)}
+
 					{profile?.role === "admin" && (
 						<NavLink to="/ManageEvents" className="btn btn-secondary mr-4 rounded-full btn-outline justify-center">
 							<ManageEventsIcon className="text-lg" />
 							Manage Events
 						</NavLink>
+
+
 					)}
 					{session && (
 						<div className="dropdown dropdown-end">

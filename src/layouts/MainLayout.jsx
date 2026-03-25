@@ -6,8 +6,8 @@ const MainLayout = ({ children }) => {
   return (
     <div>
       <NavBar />
-      <div className="flex flex-col items-center justify-center min-h-[calc(100vh-80rem)] border-0">
-        <main className=""> {children}</main>
+      <div className="flex flex-col justify-between items-center">
+        <main className="w-full max-w-7x1"> {children}</main>
       </div>
       <Footer />
 
