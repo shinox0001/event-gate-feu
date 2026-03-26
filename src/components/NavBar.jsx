@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink } from "react-router";
 import SignUpIcon from "./icons/SignUpIcon";
 import HomeIcon from "./icons/HomeIcon";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { SessionContext } from "./contexts/SessionContext";
 import { supabase } from "../utils/supabase";
 import LoginIcon from "./icons/LoginIcon";

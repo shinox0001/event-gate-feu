@@ -33,7 +33,7 @@ const SignUp = () => {
       password: signupForm.password,
     });
 
-    if (error) alert(signUpError);
+    if (signUpError) alert(signUpError);
 
     if (signUpData) {
       const { data: profileData, error: profileError } = await supabase

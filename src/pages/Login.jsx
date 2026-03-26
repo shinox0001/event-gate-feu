@@ -9,7 +9,7 @@ import { SessionContext } from "../components/contexts/SessionContext";
 import { useNavigate } from "react-router";
 
 const Login = () => {
-  const { session, profile } = useContext(SessionContext);
+  const { profile } = useContext(SessionContext);
   const navigate = useNavigate();
 
   useEffect(() => {
