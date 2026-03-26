@@ -63,6 +63,16 @@ const NavBar = () => {
 
 
 					)}
+
+					{profile?.role === "user" && (
+						<NavLink
+							to="/Events"
+							className="btn btn-secondary mr-4 rounded-full btn-outline justify-center"
+						>
+							Events
+						</NavLink>
+					)}
+
 					{session && (
 						<div className="dropdown dropdown-end">
 							<div

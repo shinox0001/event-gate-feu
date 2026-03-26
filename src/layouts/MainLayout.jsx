@@ -6,7 +6,7 @@ const MainLayout = ({ children }) => {
   return (
     <div>
       <NavBar />
-      <div className="flex flex-col justify-between items-center">
+      <div className="flex flex-col justify-betweeen items-center">
         <main className="w-full max-w-7x1"> {children}</main>
       </div>
       <Footer />

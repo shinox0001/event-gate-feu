@@ -11,6 +11,7 @@ import { SessionContext } from './components/contexts/SessionContext';
 import ManageEvents from './pages/ManageEvents';
 import AddEvent from './pages/AddEvent';
 import EditEvent from './pages/EditEvent';
+import Events from './pages/Events';
 
 function App() {
   const [session, setSession] = useState(null);
@@ -67,6 +68,7 @@ function App() {
         <Route path="/ManageEvents" element={<ManageEvents />} />
         <Route path="/AddEvent" element={<AddEvent />} />
         <Route path="/EditEvent/:eventId" element={<EditEvent />} />
+        <Route path="/Events" element={<Events />} />
       </Routes>
     </SessionContext.Provider>
   );
