@@ -1,6 +1,6 @@
 import './App.css'
 import { Routes, Route } from "react-router";
-import Homepage from './pages/Homepage';
+import Homepage from './pages/HomePage';
 import SignUp from './pages/SignUp';
 import { useState, useEffect } from 'react';
 import { supabase } from './utils/supabase';
