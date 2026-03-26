@@ -3,12 +3,51 @@ import Card from "../components/icons/Card";
 import { Link } from "react-router";
 import { useContext } from "react";
 import { SessionContext } from "../components/contexts/SessionContext";
+import { supabase } from "../utils/supabase";
 
-const EventCard = ({ event }) => {
+const EventCard = ({ event, registrations, setRegistrations }) => {
     const { profile } = useContext(SessionContext);
+    const isRegistered = registrations?.some(
+        (registration) =>
+            registration.profile_id === profile?.id &&
+            registration.event_id === event.id,
+    );
 
-    const register = async (eventId) => {
-        console.log(`todo: register event ${eventId}`);
+    console.log(isRegistered);
+
+    const register = async () => {
+        const { data, error } = await supabase
+            .from("registrations")
+            .insert({
+                event_id: event.id,
+                profile_id: profile.id,
+            })
+            .select()
+            .single();
+
+        if (error) alert(error);
+        if (data) {
+            setRegistrations((prev) => {
+                return [...prev, data];
+            });
+        }
+    };
+
+    const unregister = async () => {
+        const { data: deletedRegistration, errorDeleteRegistration } =
+            await supabase
+                .from("registrations")
+                .delete()
+                .eq("event_id", event.id)
+                .select()
+                .single();
+        if (errorDeleteRegistration) alert(deletedRegistration);
+        if (deletedRegistration) {
+            const updatedRegistrations = registrations.filter((registration) => {
+                return registration.id != deletedRegistration.id;
+            });
+            setRegistrations(updatedRegistrations);
+        }
     };
 
     return (
@@ -22,7 +61,7 @@ const EventCard = ({ event }) => {
 
             <div className="pt-5">
                 <Link
-                    to={`/view-event/${event.id}`}
+                    to={`/ViewEvent/${event.id}`}
                     className="btn btn-primary rounded-full ml-3 btn-outline"
                 >
                     View
@@ -43,17 +82,19 @@ const EventCard = ({ event }) => {
                     </>
                 )}
 
-                {profile?.role === "user" && (
-                    <button
-                        class="ml-3 btn btn-primary rounded-full"
-                        onClick={() => {
-                            register(event.id);
-                        }}
-                    >
+                {profile?.role === "user" && !isRegistered && (
+                    <button className="ml-3 btn btn-primary rounded-full" onClick={register}>
                         Register
                     </button>
                 )}
+
+                {profile?.role === "user" && isRegistered && (
+                    <button className="ml-3 btn btn-primary rounded-full" onClick={unregister}>
+                        Unregister
+                    </button>
+                )}
             </div>
+            {isRegistered && <p> You are already registered</p>}
         </Card>
     );
 };
